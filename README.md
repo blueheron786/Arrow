@@ -8,14 +8,23 @@ Built in C#, Blazor, and .NET 10!
 
 # Included Features
 
-- User registration and authentication (via cookies)
+- Local user registration and authentication backed by PostgreSQL + secure cookie sessions
+- Password hashing with BCrypt (salted per best practices)
+- Automatic schema management via FluentMigrator (users table + future migrations)
 - An empty background task that starts and stops with the application
 
 # Using Arrow
 
-- Clone the arrow repo
-- Update the connection string sample
-- Run Arrow to create the DB
+1. Clone this repository and open it in VS Code.
+2. Update `ConnectionStrings:DefaultConnection` in `Arrow.Blazor/appsettings.Development.json` to match your PostgreSQL instance.
+3. Build and run the Blazor Server app (migrations run automatically on startup):
+
+```powershell
+cd Arrow
+dotnet run --project Arrow.Blazor
+```
+
+4. Browse to `https://localhost:5001`, click **Login**, then **Register** to create an account. After successful registration you are redirected home and signed in automatically with your email shown in the header.
 
 # Best Uses
 

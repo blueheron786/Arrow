@@ -1,4 +1,7 @@
 ﻿@inherits LayoutComponentBase
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+@inject ILogger<MainLayout> Logger
 
 <div class="page">
     <div class="sidebar">
@@ -6,8 +9,23 @@
     </div>
 
     <main>
-        <div class="top-row px-4">
+        <div class="top-row px-4 auth-bar">
             <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            <AuthorizeView>
+                <Authorized Context="authContext">
+                    <div class="user-controls">
+                        <span class="user-email">@authContext.User.Identity?.Name</span>
+                        <button type="button" class="btn btn-link" @onclick="LogoutAsync" disabled="@isLoggingOut">Logout</button>
+                        @if (!string.IsNullOrWhiteSpace(errorMessage))
+                        {
+                            <span class="text-danger">@errorMessage</span>
+                        }
+                    </div>
+                </Authorized>
+                <NotAuthorized>
+                    <NavLink href="/login">Login</NavLink>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
 
         <article class="content px-4">
@@ -21,3 +39,39 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code {
+    private bool isLoggingOut;
+    private string? errorMessage;
+
+    private async Task LogoutAsync()
+    {
+        if (isLoggingOut)
+        {
+            return;
+        }
+
+        isLoggingOut = true;
+
+        try
+        {
+            errorMessage = null;
+            var result = await JS.InvokeAsync<AuthApiResponse>("arrowAuth.logout");
+            if (!result.Succeeded)
+            {
+                errorMessage = string.Join(' ', result.Errors);
+                return;
+            }
+
+            Navigation.NavigateTo("/", forceLoad: true);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error during logout");
+        }
+        finally
+        {
+            isLoggingOut = false;
+        }
+    }
+}
