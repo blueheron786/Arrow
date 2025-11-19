@@ -1,0 +1,48 @@
+@rendermode InteractiveServer
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">Home Page Views Over Time</h5>
+        <div class="text-muted">
+            <small>@GetDateRangeSummary()</small>
+        </div>
+    </div>
+    <div class="card-body">
+        @* Date range controls *@
+        <div class="mb-3">
+            <div class="row g-2">
+                <div class="col-md-3">
+                    <input type="date" class="form-control form-control-sm" @bind="StartDate" @bind:format="yyyy-MM-dd" />
+                </div>
+                <div class="col-md-3">
+                    <input type="date" class="form-control form-control-sm" @bind="EndDate" @bind:format="yyyy-MM-dd" />
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="LoadPageViews" disabled="@IsLoading">
+                        @if (IsLoading)
+                        {
+                            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                        }
+                        Update
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="SetLast30Days">Last 30 Days</button>
+                </div>
+            </div>
+        </div>
+        
+        @* Chart container *@
+        <div style="position: relative; height: 300px;">
+            <canvas id="pageViewsChart-@ComponentId"></canvas>
+        </div>
+        
+        @if (IsLoading)
+        {
+            <div class="text-center py-3">
+                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <small class="text-muted ms-2">Loading page view trends...</small>
+            </div>
+        }
+    </div>
+</div>
