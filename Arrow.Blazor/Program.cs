@@ -34,8 +34,12 @@ builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddHttpClient();
 builder.Services.Configure<MailerSendConfiguration>(builder.Configuration.GetSection("MailerSend"));
+
+/// DI stuff
+// Email support via MailerSend
 builder.Services.AddTransient<IEmailService, MailerSendEmailService>();
-builder.Services.AddHostedService<EmailHealthCheckBackgroundService>();
+// Sample background task that runs daily
+builder.Services.AddHostedService<IdleBackgroundService>();
 
 builder.Services.AddFluentMigratorCore()
     .ConfigureRunner(rb => rb
