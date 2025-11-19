@@ -12,6 +12,8 @@ Built in C#, Blazor, and .NET 10!
 - Password hashing with BCrypt (salted per best practices)
 - Automatic schema management via FluentMigrator (users table + future migrations)
 - An empty background task that starts and stops with the application
+- Email integration
+- A basic analytics page that shows home page views
 
 # Using Arrow
 
