@@ -28,9 +28,7 @@ dotnet run --project Arrow.Blazor
 
 ## Configuring Email
 
-If you plan to use emails in your application, modify `appsettings.Development.json` and fill in the `MailerSend` settings (API key, from address, etc.).
-
-4. Browse to `https://localhost:5001`, click **Login**, then **Register** to create an account. After successful registration you are redirected home and signed in automatically with your email shown in the header.
+If you plan to send emails in your application, modify `appsettings.Development.json` and fill in the `MailerSend` settings (API key, from address, etc.).
 
 # Best Uses
 
