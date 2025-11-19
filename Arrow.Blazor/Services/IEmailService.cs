@@ -1,5 +1,3 @@
-using Arrow.Blazor.Contracts.Email;
-
 namespace Arrow.Blazor.Services;
 
 public interface IEmailService

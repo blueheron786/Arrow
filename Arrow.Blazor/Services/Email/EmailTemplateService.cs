@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-using Arrow.Blazor.Contracts.Email;
 
 namespace Arrow.Blazor.Services.Email;
 
