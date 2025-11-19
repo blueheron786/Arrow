@@ -2,6 +2,7 @@ using Arrow.Blazor.Components;
 using Arrow.Blazor.Data;
 using Arrow.Blazor.Endpoints;
 using Arrow.Blazor.Services;
+using Arrow.Blazor.Services.Background;
 using Arrow.Blazor.Services.Email;
 using FluentMigrator.Runner;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -34,6 +35,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddHttpClient();
 builder.Services.Configure<MailerSendConfiguration>(builder.Configuration.GetSection("MailerSend"));
 builder.Services.AddTransient<IEmailService, MailerSendEmailService>();
+builder.Services.AddHostedService<EmailHealthCheckBackgroundService>();
 
 builder.Services.AddFluentMigratorCore()
     .ConfigureRunner(rb => rb
