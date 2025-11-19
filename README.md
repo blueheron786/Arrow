@@ -8,12 +8,18 @@ Built in C#, Blazor, and .NET 10!
 
 # Included Features
 
-- Local user registration and authentication backed by PostgreSQL + secure cookie sessions
+- Local user registration and authentication (backed by PostgreSQL + secure cookie sessions)
+- A form to submit feedback to the site admin
+- A basic analytics page that shows home page views
+
+You can disable some of these features (e.g. user registration, feedback form) by configuring `Features` in `appsettings` to `false`.
+
+## Technical Features
+
 - Password hashing with BCrypt (salted per best practices)
 - Automatic schema management via FluentMigrator (users table + future migrations)
 - An empty background task that starts and stops with the application
 - Email integration
-- A basic analytics page that shows home page views
 
 # Using Arrow
 
