@@ -31,9 +31,11 @@ builder.Services.AddAuthorization();
 builder.Services.AddSingleton<IDbConnectionFactory, NpgsqlConnectionFactory>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAnalyticsRepository, AnalyticsRepository>();
+builder.Services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
 builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPageViewTracker, PageViewTracker>();
+builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();
 builder.Services.AddHttpClient();
 builder.Services.Configure<MailerSendConfiguration>(builder.Configuration.GetSection("MailerSend"));
 
@@ -42,6 +44,8 @@ builder.Services.Configure<MailerSendConfiguration>(builder.Configuration.GetSec
 builder.Services.AddTransient<IEmailService, MailerSendEmailService>();
 // Sample background task that runs daily
 builder.Services.AddHostedService<IdleBackgroundService>();
+// Background task to cleanup expired password reset tokens
+builder.Services.AddHostedService<PasswordResetCleanupService>();
 
 builder.Services.AddFluentMigratorCore()
     .ConfigureRunner(rb => rb

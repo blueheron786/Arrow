@@ -39,6 +39,15 @@ public sealed class UserRepository(IDbConnectionFactory connectionFactory, ILogg
         return user.Id;
     }
 
+    public async Task UpdatePasswordAsync(Guid userId, string passwordHash, CancellationToken cancellationToken = default)
+    {
+        const string command = "UPDATE users SET password_hash = @PasswordHash WHERE id = @UserId";
+
+        using var connection = CreateConnection();
+        var definition = new CommandDefinition(command, new { UserId = userId, PasswordHash = passwordHash }, cancellationToken: cancellationToken);
+        await connection.ExecuteAsync(definition);
+    }
+
     private async Task<UserAccount?> QuerySingleAsync(string sql, object parameters, CancellationToken cancellationToken)
     {
         try
