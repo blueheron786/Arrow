@@ -1,5 +1,6 @@
 window.arrowAuth = (() => {
-    const antiforgeryCookieName = 'RequestVerificationToken';
+    const antiforgeryCookieName = 'XSRF-TOKEN';
+    let tokenCache = null;
 
     function getCookie(name) {
         const value = `; ${document.cookie}`;
@@ -11,17 +12,40 @@ window.arrowAuth = (() => {
     }
 
     function getAntiforgeryToken() {
-        return getCookie(antiforgeryCookieName);
+        if (!tokenCache) {
+            tokenCache = getCookie(antiforgeryCookieName);
+        }
+        return tokenCache;
+    }
+
+    async function ensureAntiforgeryToken() {
+        const token = getAntiforgeryToken();
+        if (token) {
+            return token;
+        }
+
+        // Fetch the antiforgery token
+        try {
+            await fetch('/antiforgery/token', {
+                method: 'GET',
+                credentials: 'include'
+            });
+            tokenCache = getCookie(antiforgeryCookieName);
+            return tokenCache;
+        } catch (error) {
+            console.error('Failed to fetch antiforgery token:', error);
+            return null;
+        }
     }
 
     async function postJson(path, payload) {
-        const token = getAntiforgeryToken();
+        const token = await ensureAntiforgeryToken();
         const response = await fetch(path, {
             method: 'POST',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
-                ...(token ? { RequestVerificationToken: token } : {})
+                ...(token ? { 'RequestVerificationToken': token } : {})
             },
             body: payload ? JSON.stringify(payload) : null
         });

@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Antiforgery
+@inject IAntiforgery Antiforgery
+@inject IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -24,3 +28,19 @@
 </body>
 
 </html>
+
+@code {
+    protected override void OnInitialized()
+    {
+        // Generate and store antiforgery token
+        if (HttpContextAccessor.HttpContext != null)
+        {
+            var tokens = Antiforgery.GetAndStoreTokens(HttpContextAccessor.HttpContext);
+            HttpContextAccessor.HttpContext.Response.Cookies.Append(
+                "XSRF-TOKEN",
+                tokens.RequestToken!,
+                new CookieOptions { HttpOnly = false, SameSite = SameSiteMode.Strict }
+            );
+        }
+    }
+}

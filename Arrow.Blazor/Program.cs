@@ -83,4 +83,12 @@ app.MapRazorComponents<App>()
 
 app.MapAuthEndpoints();
 
+// Add antiforgery token endpoint for JavaScript
+app.MapGet("/antiforgery/token", (Microsoft.AspNetCore.Antiforgery.IAntiforgery antiforgery, HttpContext context) =>
+{
+    var tokens = antiforgery.GetAndStoreTokens(context);
+    context.Response.Cookies.Append("XSRF-TOKEN", tokens.RequestToken!, new CookieOptions { HttpOnly = false, SameSite = SameSiteMode.Strict });
+    return Results.Ok();
+});
+
 app.Run();
