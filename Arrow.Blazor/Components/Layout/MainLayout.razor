@@ -3,31 +3,47 @@
 @inject NavigationManager Navigation
 @inject ILogger<MainLayout> Logger
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<div class="layout-shell">
+    <header class="app-header">
+        <div class="brand">
+            <a class="brand-link" href="/">Arrow.Blazor</a>
+        </div>
 
-    <main>
-        <div class="top-row px-4 auth-bar">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+        <nav class="primary-nav" aria-label="Primary">
+            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                <i class="fa-solid fa-house" aria-hidden="true"></i>
+                <span>Home</span>
+            </NavLink>
+            <NavLink class="nav-link" href="/feedback">
+                <i class="fa-solid fa-comments" aria-hidden="true"></i>
+                <span>Feedback</span>
+            </NavLink>
+            <NavLink class="nav-link" href="/admin/stats">
+                <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+                <span>Statistics</span>
+            </NavLink>
+        </nav>
+
+        <div class="auth-bar">
             <AuthorizeView>
                 <Authorized Context="authContext">
                     <div class="user-controls">
                         <span class="user-email">@authContext.User.Identity?.Name</span>
-                        <button type="button" class="btn btn-link" @onclick="LogoutAsync" disabled="@isLoggingOut">Logout</button>
+                        <button type="button" class="btn btn-link logout" @onclick="LogoutAsync" disabled="@isLoggingOut">Logout</button>
                         @if (!string.IsNullOrWhiteSpace(errorMessage))
                         {
-                            <span class="text-danger">@errorMessage</span>
+                            <span class="text-danger auth-error">@errorMessage</span>
                         }
                     </div>
                 </Authorized>
                 <NotAuthorized>
-                    <NavLink href="/login">Login</NavLink>
+                    <NavLink class="nav-link alt" href="/login">Login</NavLink>
                 </NotAuthorized>
             </AuthorizeView>
         </div>
+    </header>
 
+    <main>
         <article class="content px-4">
             @Body
         </article>
@@ -68,6 +84,7 @@
         catch (Exception ex)
         {
             Logger.LogError(ex, "Error during logout");
+            errorMessage = "Unable to sign out right now.";
         }
         finally
         {
