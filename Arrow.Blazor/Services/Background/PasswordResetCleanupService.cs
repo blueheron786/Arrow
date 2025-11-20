@@ -1,3 +1,4 @@
+using Arrow.Blazor.Configuration;
 using Arrow.Blazor.Data;
 
 namespace Arrow.Blazor.Services.Background;
@@ -18,6 +19,11 @@ public class PasswordResetCleanupService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        if (!FeatureToggles.IsEmailEnabled)
+        {
+            return;
+        }
+
         _logger.LogInformation("Password reset cleanup service starting");
 
         while (!stoppingToken.IsCancellationRequested)
