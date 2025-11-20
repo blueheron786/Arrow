@@ -1,19 +1,35 @@
+:root {
+    color-scheme: light;
+    --primary-color: rgb(32, 64, 255);
+    --primary-color-rgb: 32, 64, 255;
+    --page-bg: #f5f6fb;
+    --text-color: #0b0c1a;
+    --border-muted: rgba(15, 20, 58, 0.08);
+}
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: var(--page-bg);
+    color: var(--text-color);
+    margin: 0;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 a, .btn-link {
-    color: #006bb7;
+    color: var(--primary-color);
 }
 
 .btn-primary {
     color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+    background-color: var(--primary-color);
+    border-color: rgba(var(--primary-color-rgb), 0.9);
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem #fff, 0 0 0 0.25rem rgba(var(--primary-color-rgb), 0.35);
 }
 
 .content {
@@ -42,9 +58,9 @@ h1:focus {
     color: white;
 }
 
-    .blazor-error-boundary::after {
-        content: "An error has occurred."
-    }
+.blazor-error-boundary::after {
+    content: "An error has occurred."
+}
 
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
