@@ -38,6 +38,7 @@ builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPageViewTracker, PageViewTracker>();
 builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();
+builder.Services.AddScoped<IAdminAccessService, AdminAccessService>();
 builder.Services.AddHttpClient();
 builder.Services.Configure<MailerSendConfiguration>(builder.Configuration.GetSection("MailerSend"));
 

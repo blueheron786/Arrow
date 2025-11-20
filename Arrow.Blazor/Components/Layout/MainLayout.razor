@@ -2,6 +2,7 @@
 @inject IJSRuntime JS
 @inject NavigationManager Navigation
 @inject ILogger<MainLayout> Logger
+@inject IAdminAccessService AdminAccessService
 
 <div class="layout-shell">
     <header class="app-header">
@@ -18,10 +19,13 @@
                 <i class="fa-solid fa-comments" aria-hidden="true"></i>
                 <span>Contact Us</span>
             </NavLink>
-            <NavLink class="nav-link" href="/admin/stats">
-                <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
-                <span>Statistics</span>
-            </NavLink>
+            @if (AdminAccessService.IsAdmin())
+            {
+                <NavLink class="nav-link" href="/admin/stats">
+                    <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+                    <span>Statistics</span>
+                </NavLink>
+            }
         </nav>
 
         <div class="auth-bar">
