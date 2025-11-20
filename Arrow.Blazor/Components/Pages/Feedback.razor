@@ -9,52 +9,61 @@
     <h1>Feedback</h1>
     <p>We'd love to hear from you! Please share your feedback, suggestions, or report any issues.</p>
 
-    @if (!string.IsNullOrEmpty(statusMessage))
+    @if (!IsFeedbackAvailable)
     {
-        <div class="alert @(isSuccess ? "alert-success" : "alert-danger") alert-dismissible fade show" role="alert">
-            @statusMessage
-            <button type="button" class="btn-close" @onclick="ClearStatus"></button>
+        <div class="alert alert-warning" role="alert">
+            @DisabledFeedbackMessage
         </div>
     }
+    else
+    {
+        if (!string.IsNullOrEmpty(statusMessage))
+        {
+            <div class="alert @(isSuccess ? "alert-success" : "alert-danger") alert-dismissible fade show" role="alert">
+                @statusMessage
+                <button type="button" class="btn-close" @onclick="ClearStatus"></button>
+            </div>
+        }
 
-    <div class="card">
-        <div class="card-body">
-            <EditForm Model="@feedbackModel" OnValidSubmit="SubmitFeedback" FormName="feedbackForm">
-                <DataAnnotationsValidator />
-                <ValidationSummary class="text-danger" />
+        <div class="card">
+            <div class="card-body">
+                <EditForm Model="@feedbackModel" OnValidSubmit="SubmitFeedback" FormName="feedbackForm">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary class="text-danger" />
 
-                <div class="mb-3">
-                    <label for="name" class="form-label">Name</label>
-                    <InputText id="name" class="form-control" @bind-Value="feedbackModel.Name" />
-                    <ValidationMessage For="@(() => feedbackModel.Name)" />
-                </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <InputText id="name" class="form-control" @bind-Value="feedbackModel.Name" />
+                        <ValidationMessage For="@(() => feedbackModel.Name)" />
+                    </div>
 
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email Address</label>
-                    <InputText id="email" type="email" class="form-control" @bind-Value="feedbackModel.Email" />
-                    <ValidationMessage For="@(() => feedbackModel.Email)" />
-                </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <InputText id="email" type="email" class="form-control" @bind-Value="feedbackModel.Email" />
+                        <ValidationMessage For="@(() => feedbackModel.Email)" />
+                    </div>
 
-                <div class="mb-3">
-                    <label for="message" class="form-label">Message</label>
-                    <InputTextArea id="message" class="form-control" rows="6" @bind-Value="feedbackModel.Message" />
-                    <ValidationMessage For="@(() => feedbackModel.Message)" />
-                </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message</label>
+                        <InputTextArea id="message" class="form-control" rows="6" @bind-Value="feedbackModel.Message" />
+                        <ValidationMessage For="@(() => feedbackModel.Message)" />
+                    </div>
 
-                <button type="submit" class="btn btn-primary" disabled="@isSubmitting">
-                    @if (isSubmitting)
-                    {
-                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                        <span>Sending...</span>
-                    }
-                    else
-                    {
-                        <span>Submit Feedback</span>
-                    }
-                </button>
-            </EditForm>
+                    <button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+                        @if (isSubmitting)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            <span>Sending...</span>
+                        }
+                        else
+                        {
+                            <span>Submit Feedback</span>
+                        }
+                    </button>
+                </EditForm>
+            </div>
         </div>
-    </div>
+    }
 </div>
 
 @code {
@@ -62,11 +71,22 @@
     private bool isSubmitting = false;
     private string? statusMessage;
     private bool isSuccess = false;
+    private bool IsFeedbackAvailable => FeatureToggles.IsFeedbackEnabled && FeatureToggles.IsEmailEnabled;
+    private string DisabledFeedbackMessage => !FeatureToggles.IsFeedbackEnabled
+        ? "Feedback submissions are currently disabled."
+        : "Email delivery is turned off, so feedback cannot be submitted right now.";
 
     private async Task SubmitFeedback()
     {
         try
         {
+            if (!IsFeedbackAvailable)
+            {
+                statusMessage = DisabledFeedbackMessage;
+                isSuccess = false;
+                return;
+            }
+
             isSubmitting = true;
             statusMessage = null;
 

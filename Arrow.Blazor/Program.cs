@@ -1,4 +1,5 @@
 using Arrow.Blazor.Components;
+using Arrow.Blazor.Configuration;
 using Arrow.Blazor.Data;
 using Arrow.Blazor.Endpoints;
 using Arrow.Blazor.Services;
@@ -8,6 +9,7 @@ using FluentMigrator.Runner;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
+FeatureToggles.Initialize(builder.Configuration);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' was not found.");
@@ -78,7 +80,7 @@ app.UseAuthorization();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
-app.MapRazorComponents<App>()
+app.MapRazorComponents<Arrow.Blazor.Components.App>()
     .AddInteractiveServerRenderMode();
 
 app.MapAuthEndpoints();

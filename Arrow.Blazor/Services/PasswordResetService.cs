@@ -1,3 +1,4 @@
+using Arrow.Blazor.Configuration;
 using Arrow.Blazor.Data;
 using Arrow.Blazor.Services.Email;
 using Microsoft.AspNetCore.Http;
@@ -33,6 +34,12 @@ public class PasswordResetService : IPasswordResetService
     {
         try
         {
+            if (!FeatureToggles.IsEmailEnabled)
+            {
+                _logger.LogWarning("Password reset requested for {Email} but email delivery is disabled", email);
+                return true;
+            }
+
             var user = await _userRepository.GetByEmailAsync(email);
             
             // Always return true to prevent email enumeration attacks

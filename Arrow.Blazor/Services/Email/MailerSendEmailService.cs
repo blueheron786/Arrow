@@ -1,7 +1,7 @@
-using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using Arrow.Blazor.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -27,6 +27,12 @@ public class MailerSendEmailService : IEmailService
 
     public async Task SendWelcomeEmailAsync(string email, string unsubscribeToken)
     {
+        if (!FeatureToggles.IsEmailEnabled)
+        {
+            _logger.LogWarning("Email delivery disabled; skipping welcome email for {Email}", email);
+            return;
+        }
+
         try
         {
             var template = _templateService.CreateWelcomeTemplate(email, unsubscribeToken);
@@ -42,6 +48,12 @@ public class MailerSendEmailService : IEmailService
 
     public async Task SendGenericEmailAsync(string to, string subject, string body)
     {
+        if (!FeatureToggles.IsEmailEnabled)
+        {
+            _logger.LogWarning("Email delivery disabled; skipping email to {Email}", to);
+            return;
+        }
+
         var template = new EmailTemplate
         {
             To = to,
@@ -55,6 +67,12 @@ public class MailerSendEmailService : IEmailService
 
     public async Task<bool> IsHealthyAsync()
     {
+        if (!FeatureToggles.IsEmailEnabled)
+        {
+            _logger.LogWarning("MailerSend health check skipped because email delivery is disabled");
+            return false;
+        }
+
         try
         {
             var request = new HttpRequestMessage(HttpMethod.Get, "https://api.mailersend.com/v1/domains");
