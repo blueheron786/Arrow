@@ -8,11 +8,14 @@ Built in C#, Blazor, and .NET 10!
 
 # Included Features
 
+- Minimal, mobile-responsive theme that's easy to re-theme
 - Local user registration and authentication (backed by PostgreSQL + secure cookie sessions)
-- A form to submit feedback to the site admin
-- A basic analytics page that shows home page views
+- Contact Us form
+- A basic analytics dashboard that shows home page views to the admin
 
 You can disable some of these features (e.g. user registration, feedback form) by configuring `Features` in `appsettings` to `false`.
+
+Note that setting a MailerSend API key enables all email-connected features, such as the "Forgot my Password" workflow and allowing users to submit feedback.
 
 ## Technical Features
 
