@@ -13,12 +13,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1.25rem;
-    padding: 0.65rem 1.5rem;
+    gap: 1.5rem;
+    padding: 0.9rem 2.5rem;
     background-color: var(--primary-color);
     border-bottom: 1px solid var(--border-muted);
     color: #fff;
-    box-shadow: 0 2px 8px rgba(15, 20, 58, 0.2);
+    box-shadow: 0 2px 10px rgba(15, 20, 58, 0.25);
 }
 
 .brand-link {
@@ -31,21 +31,21 @@
 
 .primary-nav {
     display: flex;
-    gap: 0.5rem;
+    gap: 1rem;
     flex-wrap: wrap;
     align-items: center;
 }
 
 .nav-link {
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.95);
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    padding: 0.4rem 0.9rem;
-    border-radius: 0.4rem;
+    padding: 0.55rem 1.2rem;
+    border-radius: 0.45rem;
     font-weight: 500;
     text-decoration: none;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .nav-link.active,
@@ -66,7 +66,7 @@
 .auth-bar {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1.25rem;
 }
 
 .user-controls {
@@ -83,6 +83,18 @@
 .logout {
     padding: 0;
     font-size: 0.95rem;
+    color: #fff;
+    transition: color 0.2s ease;
+}
+
+.logout:hover,
+.logout:focus-visible {
+    color: #fff;
+    text-decoration: none;
+}
+
+.logout:disabled {
+    opacity: 0.6;
 }
 
 main {
