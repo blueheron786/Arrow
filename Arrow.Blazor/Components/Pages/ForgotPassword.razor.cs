@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using Arrow.Blazor.Configuration;
 using Arrow.Blazor.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Components;
 
 namespace Arrow.Blazor.Components.Pages;
@@ -9,10 +11,23 @@ public partial class ForgotPassword : ComponentBase
     [Inject]
     private IPasswordResetService PasswordResetService { get; set; } = default!;
 
+    [Inject]
+    private IHttpContextAccessor HttpContextAccessor { get; set; } = default!;
+
+    private bool _isEmailFeatureDisabled;
     private ForgotPasswordModel _model = new();
     private bool _isSubmitting = false;
     private bool _emailSent = false;
     private string _errorMessage = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        _isEmailFeatureDisabled = !FeatureToggles.IsEmailEnabled;
+        if (_isEmailFeatureDisabled)
+        {
+            HttpContextAccessor.HttpContext?.Response.StatusCode = StatusCodes.Status404NotFound;
+        }
+    }
 
     private async Task HandleSubmit()
     {
