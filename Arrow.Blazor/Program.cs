@@ -47,8 +47,11 @@ builder.Services.Configure<MailerSendConfiguration>(builder.Configuration.GetSec
 builder.Services.AddTransient<IEmailService, MailerSendEmailService>();
 // Sample background task that runs daily
 builder.Services.AddHostedService<IdleBackgroundService>();
-// Background task to cleanup expired password reset tokens
-builder.Services.AddHostedService<PasswordResetCleanupService>();
+// Background task to cleanup expired password reset tokens (only when email is enabled)
+if (FeatureToggles.IsEmailEnabled)
+{
+    builder.Services.AddHostedService<PasswordResetCleanupService>();
+}
 
 builder.Services.AddFluentMigratorCore()
     .ConfigureRunner(rb => rb
