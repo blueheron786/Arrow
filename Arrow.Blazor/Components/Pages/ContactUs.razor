@@ -71,10 +71,8 @@
     private bool isSubmitting = false;
     private string? statusMessage;
     private bool isSuccess = false;
-    private bool IsFeedbackAvailable => FeatureToggles.IsFeedbackEnabled && FeatureToggles.IsEmailEnabled;
-    private string DisabledFeedbackMessage => !FeatureToggles.IsFeedbackEnabled
-        ? "Feedback submissions are currently disabled."
-        : "Email delivery is turned off, so feedback cannot be submitted right now.";
+    private bool IsFeedbackAvailable => FeatureToggles.IsFeedbackEnabled;
+    private string DisabledFeedbackMessage => "Feedback submissions are currently disabled.";
 
     private async Task SubmitFeedback()
     {
@@ -99,13 +97,11 @@
             }
 
             var subject = $"Feedback from {feedbackModel.Name}";
-            var body = $@"
-                <h2>New Feedback Received</h2>
-                <p><strong>From:</strong> {feedbackModel.Name} ({feedbackModel.Email})</p>
-                <hr />
-                <p><strong>Message:</strong></p>
-                <p>{feedbackModel.Message.Replace("\n", "<br />")}</p>
-            ";
+            var body = $@"<h2>New Feedback Received</h2>
+<p><strong>From:</strong> {feedbackModel.Name} ({feedbackModel.Email})</p>
+<hr />
+<p><strong>Message:</strong></p>
+<p>{feedbackModel.Message.Replace("\n", "<br />")}</p>";
 
             await EmailService.SendGenericEmailAsync(adminEmail, subject, body);
 

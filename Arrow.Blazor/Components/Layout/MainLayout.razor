@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using Arrow.Blazor.Configuration
+@inherits LayoutComponentBase
 @inject IJSRuntime JS
 @inject NavigationManager Navigation
 @inject ILogger<MainLayout> Logger
@@ -15,10 +16,13 @@
                 <i class="fa-solid fa-house" aria-hidden="true"></i>
                 <span>Home</span>
             </NavLink>
-            <NavLink class="nav-link" href="/contact">
-                <i class="fa-solid fa-comments" aria-hidden="true"></i>
-                <span>Contact Us</span>
-            </NavLink>
+            @if (FeatureToggles.IsFeedbackEnabled)
+            {
+                <NavLink class="nav-link" href="/contact">
+                    <i class="fa-solid fa-comments" aria-hidden="true"></i>
+                    <span>Contact Us</span>
+                </NavLink>
+            }
             @if (AdminAccessService.IsAdmin())
             {
                 <NavLink class="nav-link" href="/admin/stats">

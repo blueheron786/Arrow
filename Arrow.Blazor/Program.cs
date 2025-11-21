@@ -81,6 +81,13 @@ app.UseAuthorization();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
+
+// If feedback/contact feature is disabled, ensure the `/contact` route returns 404
+if (!FeatureToggles.IsFeedbackEnabled)
+{
+    app.MapGet("/contact", () => Results.NotFound());
+}
+
 app.MapRazorComponents<Arrow.Blazor.Components.App>()
     .AddInteractiveServerRenderMode();
 

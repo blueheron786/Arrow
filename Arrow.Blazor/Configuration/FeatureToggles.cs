@@ -11,6 +11,16 @@ public static class FeatureToggles
     {
         ArgumentNullException.ThrowIfNull(config);
         configuration = config;
+        ValidateConfiguration();
+    }
+
+    private static void ValidateConfiguration()
+    {
+        if (IsFeedbackEnabled && !IsEmailEnabled)
+        {
+            throw new InvalidOperationException(
+                "Contact Us (SubmitFeedback) requires Email to be enabled. Either enable Email by configuring MailerSend:ApiKey or disable the SubmitFeedback feature.");
+        }
     }
 
     private static IConfiguration Configuration => configuration ?? throw new InvalidOperationException(
